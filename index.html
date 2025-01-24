@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Price Predictor</title>
+    <style>
+        /* Add some basic styling */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 2rem;
+        }
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            margin-top: 0.2rem;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 2rem;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="text-align: center;">Laptop Price Predictor</h1>
+    <form method="POST">
+        <!-- Brand -->
+        <div class="form-group">
+            <label for="company">Brand</label>
+            <select name="company" id="company" required>
+                {% for company in companies %}
+                <option value="{{ company }}" {% if inputs['company'] == company %}selected{% endif %}>{{ company }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Type -->
+        <div class="form-group">
+            <label for="type">Type</label>
+            <select name="type" id="type" required>
+                {% for type in types %}
+                <option value="{{ type }}" {% if inputs['type'] == type %}selected{% endif %}>{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- RAM -->
+        <div class="form-group">
+            <label for="ram">RAM (in GB)</label>
+            <select name="ram" id="ram" required>
+                {% for ram in [2, 4, 6, 8, 12, 16, 24, 32, 64] %}
+                <option value="{{ ram }}" {% if inputs['ram'] == ram %}selected{% endif %}>{{ ram }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Weight -->
+        <div class="form-group">
+            <label for="weight">Weight of the Laptop (in kg)</label>
+            <input type="number" name="weight" id="weight" step="0.1" min="0.1" max="5" value="{{ inputs['weight'] }}" required>
+        </div>
+
+        <!-- Touchscreen -->
+        <div class="form-group">
+            <label for="touchscreen">Touchscreen</label>
+            <select name="touchscreen" id="touchscreen" required>
+                <option value="No" {% if inputs['touchscreen'] == 'No' %}selected{% endif %}>No</option>
+                <option value="Yes" {% if inputs['touchscreen'] == 'Yes' %}selected{% endif %}>Yes</option>
+            </select>
+        </div>
+
+        <!-- IPS -->
+        <div class="form-group">
+            <label for="ips">IPS Display</label>
+            <select name="ips" id="ips" required>
+                <option value="No" {% if inputs['ips'] == 'No' %}selected{% endif %}>No</option>
+                <option value="Yes" {% if inputs['ips'] == 'Yes' %}selected{% endif %}>Yes</option>
+            </select>
+        </div>
+
+        <!-- Screen Size -->
+        <div class="form-group">
+            <label for="screen_size">Screen Size (in inches)</label>
+            <input type="number" name="screen_size" id="screen_size" step="0.1" min="10" max="18" value="{{ inputs['screen_size'] }}" required>
+        </div>
+
+        <!-- Resolution -->
+        <div class="form-group">
+            <label for="resolution">Screen Resolution</label>
+            <select name="resolution" id="resolution" required>
+                {% for res in ['1920x1080', '1366x768', '1600x900', '3840x2160', '3200x1800', '2880x1800', '2560x1600', '2560x1440', '2304x1440'] %}
+                <option value="{{ res }}" {% if inputs['resolution'] == res %}selected{% endif %}>{{ res }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- CPU -->
+        <div class="form-group">
+            <label for="cpu">CPU</label>
+            <select name="cpu" id="cpu" required>
+                {% for cpu in cpus %}
+                <option value="{{ cpu }}" {% if inputs['cpu'] == cpu %}selected{% endif %}>{{ cpu }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- HDD -->
+        <div class="form-group">
+            <label for="hdd">HDD (in GB)</label>
+            <select name="hdd" id="hdd" required>
+                {% for hdd in [0, 128, 256, 512, 1024, 2048] %}
+                <option value="{{ hdd }}" {% if inputs['hdd'] == hdd %}selected{% endif %}>{{ hdd }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- SSD -->
+        <div class="form-group">
+            <label for="ssd">SSD (in GB)</label>
+            <select name="ssd" id="ssd" required>
+                {% for ssd in [0, 8, 128, 256, 512, 1024] %}
+                <option value="{{ ssd }}" {% if inputs['ssd'] == ssd %}selected{% endif %}>{{ ssd }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- GPU -->
+        <div class="form-group">
+            <label for="gpu">GPU</label>
+            <select name="gpu" id="gpu" required>
+                {% for gpu in gpus %}
+                <option value="{{ gpu }}" {% if inputs['gpu'] == gpu %}selected{% endif %}>{{ gpu }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- OS -->
+        <div class="form-group">
+            <label for="os">OS</label>
+            <select name="os" id="os" required>
+                {% for os in oss %}
+                <option value="{{ os }}" {% if inputs['os'] == os %}selected{% endif %}>{{ os }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="form-group">
+            <button type="submit">Predict Price</button>
+        </div>
+    </form>
+
+    <!-- Display Prediction Result -->
+    {% if result %}
+    <div class="result">{{ result }}</div>
+    {% endif %}
+</body>
+</html>
